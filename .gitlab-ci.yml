@@ -1,0 +1,67 @@
+image: maven:latest
+#inspired by https://gitlab.com/gitlab-examples/maven/simple-maven-example
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode"
+  POM: "-f DoNotDelete"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+Build:
+  stage: build
+  script:
+    - mvn $POM  $MAVEN_CLI_OPTS compile
+
+ADTList:
+  stage: test
+  script:
+    - mvn $POM -Dtest=list.ADTListJqwikTest test
+
+ADTStack:
+  stage: test
+  script:
+    - mvn $POM -Dtest=stack.ADTStackJqwikTest test
+
+OneListQueue:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=queue.OneListQJqwikTest test
+# -Dinclude.tests because of https://github.com/junit-team/junit5/issues/1406
+
+TwoListQueue:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=queue.TwoListQJqwikTest test
+
+ListSet:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=set.ListSetJqwikTest test
+
+TreeSet:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=set.TreeSetJqwikTest test
+
+ListMap:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=map.ListMapJqwikTest test
+
+TreeMap:
+  stage: test
+  script:
+    - mvn $POM -Dinclude.tests=map.TreeMapJqwikTest test
+
+BST:
+  stage: test
+  script:
+    - mvn $POM -Dtest=tree.bst.TreeJqwikTest test
+
+deploy-prod:
+  stage: deploy
+  script:
+    - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."

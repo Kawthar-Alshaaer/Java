@@ -1,0 +1,37 @@
+name: Praktikum Workflow
+on: [push]
+jobs:
+  list:
+    name: ADTList
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '10'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - run: mvn compile
+      - run: mvn -Dtest=list.ADTListJqwikTest#isEmpty_empty test
+      - run: mvn -Dtest=list.ADTListJqwikTest#isEmpty_cons test
+  stack:
+    name: ADTStack
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '10'
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - run: mvn compile
+      - run: mvn -Dtest=stack.ADTStackJqwikTest#isEmpty_empty test
+      - run: mvn -Dtest=stack.ADTStackJqwikTest#isEmpty_push test
